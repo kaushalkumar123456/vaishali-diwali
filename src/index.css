@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; font-family: 'DM Sans', sans-serif; background: #10091f; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; background: #10091f; color: #fff4e5; }
+button { -webkit-tap-highlight-color: transparent; }
+::selection { background: #e9b96b55; color: #fff; }
+.grain:after {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 30; opacity: .055;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+}
+.gold-text { background: linear-gradient(110deg,#fff1c9 4%,#eec878 42%,#fff0c5 72%,#c98c46 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.glass { background: linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.018)); border: 1px solid rgba(255,222,164,.17); backdrop-filter: blur(18px); }
+.text-shadow-gold { text-shadow: 0 0 30px rgba(245,190,99,.22); }
