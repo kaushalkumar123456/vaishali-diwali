@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { ArrowDown, ArrowRight, Heart, Music2, Music, Sparkles, VolumeX, X } from 'lucide-react'
+import { ArrowDown, Images, Music2, Music, Sparkles } from 'lucide-react'
 import Fireworks from './Fireworks.jsx'
+import GalleryPage from './Gallery.jsx'
 import { createAmbientMusic } from './music.js'
 
 const fadeUp = { hidden: { opacity: 0, y: 34 }, show: { opacity: 1, y: 0, transition: { duration: .9, ease: [0.22,1,0.36,1] } } }
@@ -16,9 +17,14 @@ function Stars() {
 }
 
 function Diyas() {
+  const reduceMotion = useReducedMotion()
   return <div className="flex items-end justify-center gap-8 sm:gap-16" aria-hidden="true">
-    {[-1,0,1].map((n)=><motion.div key={n} animate={{rotate:[-3,3,-3],y:[0,-5,0]}} transition={{duration:3.5+n*.3,repeat:Infinity,ease:'easeInOut',delay:n*.45}} className="relative">
-      <div className="absolute -top-9 left-1/2 h-12 w-7 -translate-x-1/2 rounded-[100%] bg-gradient-to-t from-orange-500 via-yellow-200 to-white blur-[1px] shadow-[0_0_28px_12px_rgba(255,174,67,.3)]" />
+    {[-1,0,1].map((n)=><motion.div key={n} animate={reduceMotion?undefined:{rotate:[-3,3,-3],y:[0,-5,0]}} transition={{duration:3.5+n*.3,repeat:Infinity,ease:'easeInOut',delay:n*.45}} className="relative">
+      <motion.div
+        animate={reduceMotion?undefined:{scaleX:[1,.8,1.08,.88,1],scaleY:[1,1.12,.92,1.08,1],rotate:[-4,5,-2,4,-4],opacity:[.9,1,.82,1,.9]}}
+        transition={{duration:1.15+n*.12,repeat:Infinity,ease:'easeInOut',delay:n*.17}}
+        className="absolute -top-9 left-1/2 h-12 w-7 -translate-x-1/2 rounded-[100%] bg-gradient-to-t from-orange-500 via-yellow-200 to-white blur-[1px] shadow-[0_0_28px_12px_rgba(255,174,67,.3)]"
+      />
       <div className="relative h-7 w-16 rounded-b-[100%] rounded-t-[45%] border border-[#f8d58a]/70 bg-gradient-to-b from-[#ffe5a0] via-[#c77a35] to-[#6d2b36] shadow-[0_10px_35px_rgba(240,156,61,.28)]" />
       <div className="absolute -bottom-1 left-1/2 h-2 w-12 -translate-x-1/2 rounded-full bg-[#f6c779]/30 blur-sm" />
     </motion.div>)}
@@ -42,10 +48,16 @@ export default function App() {
   const [musicOn,setMusicOn] = useState(false)
   const [letterOpen,setLetterOpen] = useState(false)
   const [showSurprise,setShowSurprise] = useState(false)
+  const [showGallery,setShowGallery] = useState(()=>window.location.hash === '#memories')
   const musicRef = useRef(null)
   const reduceMotion = useReducedMotion()
 
   useEffect(()=>()=>{musicRef.current?.close()},[])
+  useEffect(()=>{
+    const syncGalleryRoute = () => setShowGallery(window.location.hash === '#memories')
+    window.addEventListener('hashchange',syncGalleryRoute)
+    return ()=>window.removeEventListener('hashchange',syncGalleryRoute)
+  },[])
   const toggleMusic = async () => {
     if (!musicRef.current) musicRef.current = createAmbientMusic()
     if (!musicRef.current) return
@@ -55,6 +67,13 @@ export default function App() {
   const celebrate = () => setBurst(v=>v+1)
   const reveal = () => { setLetterOpen(true); celebrate() }
 
+  if (showGallery) return <div className="grain relative min-h-screen overflow-hidden bg-[#10091f] text-[#fff4e5]">
+    <Stars />
+    <Fireworks burstSignal={burst} />
+    <div className="pointer-events-none fixed inset-0 z-[2] bg-[radial-gradient(ellipse_at_center,transparent_25%,rgba(9,5,19,.45)_100%)]" />
+    <GalleryPage />
+  </div>
+
   return <div className="grain relative min-h-screen overflow-hidden bg-[#10091f] text-[#fff4e5]">
     <Stars />
     <Fireworks burstSignal={burst} />
@@ -62,9 +81,13 @@ export default function App() {
     <button onClick={toggleMusic} className="fixed right-8 top-3 z-40 flex h-[46px] items-center gap-3 rounded-full border border-[#f4d59a]/30 bg-[#1b1027]/80 px-4 text-xs font-medium tracking-normal text-[#ffe7b6] backdrop-blur-xl transition hover:border-[#f4d59a]/60 hover:bg-[#21162b]" aria-label={musicOn?'Pause music':'Play music'}>
       {musicOn?<Music size={15}/>:<Music2 size={15}/>}<span className="hidden sm:inline">{musicOn?'MUSIC ON':'PLAY MUSIC'}</span>{musicOn?<span className="flex h-3 items-end gap-[2px]"><i className="h-2 w-[2px] animate-pulse bg-[#e9bf79]"/><i className="h-3 w-[2px] animate-pulse bg-[#e9bf79]"/><i className="h-1.5 w-[2px] animate-pulse bg-[#e9bf79]"/></span>:null}
     </button>
+    <a href="#memories" className="fixed left-4 top-3 z-40 flex h-[46px] items-center gap-2 rounded-full border border-[#f4d59a]/30 bg-[#1b1027]/80 px-4 text-xs tracking-[.08em] text-[#ffe7b6] backdrop-blur-xl transition hover:border-[#f4d59a]/60 hover:bg-[#21162b]" aria-label="Open our memories gallery">
+      <Images size={15}/><span>MEMORIES</span>
+    </a>
 
     <main className="relative z-10">
-      <section className="relative flex min-h-[100svh] flex-col items-center justify-center px-5 pb-24 pt-28 text-center">
+      <section id="home" className="relative flex min-h-[100svh] items-center justify-center overflow-hidden px-5 pb-24 pt-28 text-center">
+        <div className="relative z-10 flex flex-col items-center">
         <motion.div initial="hidden" animate="show" variants={fadeUp} className="mb-7 flex items-center gap-3 text-[10px] uppercase tracking-[.38em] text-[#eac987] sm:text-xs"><span className="h-px w-8 bg-[#eac987]/60"/><Sparkles size={13}/> A little universe of light <span className="h-px w-8 bg-[#eac987]/60"/></motion.div>
         <motion.p initial={{opacity:0,y:18}} animate={{opacity:1,y:0}} transition={{delay:.25,duration:1}} className="mb-2 font-display text-2xl italic text-[#f7d9c7] sm:text-3xl">For the one who makes my world brighter</motion.p>
         <motion.h1 initial={{opacity:0,scale:.88,filter:'blur(12px)'}} animate={{opacity:1,scale:1,filter:'blur(0px)'}} transition={{duration:1.5,ease:[.2,.8,.2,1],delay:.35}} className="gold-text text-shadow-gold font-display text-[clamp(4.2rem,13vw,10rem)] leading-[.82] tracking-[-.055em]">Happy<br/><span className="italic">Diwali</span></motion.h1><br/><span className="font-display text-2xl italic text-[#f7d9c7] sm:text-3xl">To my beautiful <span className="text-[#f5cb85]">Vaishali</span></span>
@@ -72,6 +95,7 @@ export default function App() {
         <motion.p initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:1.5,duration:1}} className="mt-7 max-w-xl text-sm leading-8 text-[#e9d7d9] sm:text-lg">To my beautiful <span className="text-[#f5cb85]">Vaishali</span> — my Honey, my favourite person, and one of life's brightest blessings.</motion.p>
         <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:1.8}} className="mt-20"><Diyas/></motion.div>
         <motion.button onClick={()=>document.getElementById('letter')?.scrollIntoView({behavior:'smooth'})} initial={{opacity:0}} animate={{opacity:1}} transition={{delay:2.2}} className="mt-16 flex items-center gap-3 text-[10px] tracking-[.3em] text-[#d8c0c2] transition hover:text-[#ffe3a5]">A MESSAGE FROM MY HEART <ArrowDown size={14} className="animate-bounce"/></motion.button>
+        </div>
         <div className="pointer-events-none absolute bottom-0 left-1/2 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#e9bd75]/40 to-transparent"/>
       </section>
 
@@ -98,13 +122,14 @@ export default function App() {
           <h2 className="gold-text font-display text-5xl sm:text-7xl">May your light never fade</h2>
           <div className="mt-14 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-4">
             {[
-              ['peace.png','🪷','Peace','May your heart always find calm, comfort, and a place where it can rest.'],
-              ['happiness.png','✨','Happiness','May small joys surprise you and give you a thousand reasons to smile.'],
-              ['dreams.png','🦋','Dreams','May you keep growing, shining, and reaching every beautiful dream.'],
-              ['trust.png','🤍','Trust','May the bond we share grow through honesty, kindness, and understanding.']
-            ].map(([image,icon,title,copy])=><motion.article key={title} whileHover={reduceMotion?{}:{y:-8}} transition={{duration:.3}} className="glass overflow-hidden rounded-2xl">
-              <img src={`/images/${image}`} alt={`${title} placeholder illustration`} className="h-40 w-full object-cover" />
-              <div className="p-6"><span className="text-3xl" aria-hidden="true">{icon}</span><h3 className="mt-5 font-display text-3xl text-[#f2d18f]">{title}</h3><p className="mt-3 text-sm leading-7 text-[#dfced5]">{copy}</p></div>
+              ['peace.jpeg','🪷','Peace','May your heart always find calm, comfort, and a place where it can rest.'],
+              ['happiness.jpeg','✨','Happiness','May small joys surprise you and give you a thousand reasons to smile.'],
+              ['dreams.jpeg','🦋','Dreams','May you keep growing, shining, and reaching every beautiful dream.'],
+              ['trust.jpeg','🤍','Trust','May the bond we share grow through honesty, kindness, and understanding.']
+            ].map(([image,icon,title,copy])=><motion.article key={title} whileHover={reduceMotion?{}:{y:-8}} transition={{duration:.3}} className="glass relative isolate aspect-[9/16] overflow-hidden rounded-2xl">
+              <img src={`/images/${image}`} alt={`${title} illustration`} className="absolute inset-0 h-full w-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1a1021] via-[#1a1021]/70 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-6"><span className="text-3xl" aria-hidden="true">{icon}</span><h3 className="mt-5 font-display text-3xl text-[#f2d18f]">{title}</h3><p className="mt-3 text-sm leading-7 text-[#dfced5]">{copy}</p></div>
             </motion.article>)}
           </div>
         </motion.div>
@@ -118,7 +143,7 @@ export default function App() {
           <Envelope onOpen={reveal}/>
           <AnimatePresence>
             {letterOpen && <motion.div initial={{opacity:0,y:25,scale:.96}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0}} className="glass relative isolate mt-6 overflow-hidden rounded-2xl p-7 text-center sm:p-10">
-              <img src="/images/promise-watermark.png" alt="" aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 h-full w-full object-contain opacity-[0.12]" />
+              <img src="/images/promise-watermark.png" alt="" aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 h-full w-full object-contain opacity-25" />
               <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden" aria-hidden="true">
                 {[
                   ['left-5 top-6','text-[#ffe6a6]'],
