@@ -5,6 +5,7 @@ import { ArrowLeft, Heart, X } from 'lucide-react'
 const memories = [
   { image: 'happiness.jpeg', caption: 'A smile that brightens everything' },
   { image: 'promise-watermark.png', caption: 'A little Diwali sparkle' },
+  { image: 'petal.jpeg', caption: 'H ♥ K, written in rose petals', alt: 'Rose petals arranged as H, a heart, and K', fitPortrait: true },
   { image: 'peace.jpeg', caption: 'The beauty in the little things' },
   { image: 'dreams.jpeg', caption: 'Keep shining, always' },
   { image: 'trust.jpeg', caption: 'My favourite kind of lovely' }
@@ -48,7 +49,13 @@ export default function GalleryPage() {
           className="group relative isolate aspect-[3/4] w-full overflow-hidden rounded-2xl border border-[#f4d59a]/20 bg-[#24152b] text-left shadow-[0_18px_50px_rgba(0,0,0,.24)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f2cd88]"
           aria-label={`View memory: ${memory.caption}`}
         >
-          <img src={`/images/${memory.image}`} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-contain" />
+          {memory.fitPortrait && <img src={`/images/${memory.image}`} alt="" aria-hidden="true" loading="lazy" className="gallery-image-backdrop absolute inset-0 h-full w-full object-cover" />}
+          <img
+            src={`/images/${memory.image}`}
+            alt={memory.alt || ''}
+            loading="lazy"
+            className={`absolute inset-0 h-full w-full ${memory.fitPortrait ? 'gallery-image-contain object-contain' : 'object-contain'}`}
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-[#10091f]/90 via-[#10091f]/5 to-transparent opacity-90 transition-opacity group-hover:opacity-100" />
           <span className="absolute right-4 top-4 rounded-full border border-white/25 bg-black/20 px-3 py-1 text-[10px] tracking-[.2em] text-white/85 backdrop-blur-md">0{index + 1}</span>
           <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4 sm:p-6">
@@ -57,7 +64,7 @@ export default function GalleryPage() {
           </span>
         </motion.button>)}
       </motion.div>
-      <p className="mt-8 text-center text-xs tracking-wide text-[#bda9bb]">Sample photos for now — this album is ready for your own memories.</p>
+      <p className="mt-8 text-center text-xs tracking-wide text-[#bda9bb]">A little album of our favourite moments and Diwali memories.</p>
     </div>
 
     <AnimatePresence>

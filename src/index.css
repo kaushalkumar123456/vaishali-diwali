@@ -15,3 +15,55 @@ button { -webkit-tap-highlight-color: transparent; }
 .gold-text { background: linear-gradient(110deg,#fff1c9 4%,#eec878 42%,#fff0c5 72%,#c98c46 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
 .glass { background: linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.018)); border: 1px solid rgba(255,222,164,.17); backdrop-filter: blur(18px); }
 .text-shadow-gold { text-shadow: 0 0 30px rgba(245,190,99,.22); }
+.celebration-page--night { color: #fff4e5; background: radial-gradient(ellipse at 50% 5%, #322448 0%, #171126 42%, #0c0918 100%); }
+.celebration-page--day { color: #412a38; background: radial-gradient(ellipse at 50% 0%, #fff1d2 0%, #f7d8c6 48%, #e8c1b6 100%); }
+.celebration-page--day .celebration-title { color: #764454; }
+.celebration-page--day .gift-card { color: #482f3b; }
+.celebration-page--day .firecracker-card { color: #482f3b; border-color: #704b5a26; background: #fff8f08c; }
+.celebration-page--day .firecracker-card:hover { border-color: #ad754d80; background: #fff9f0; }
+.celebration-page--day .firecracker-card span span:last-child { color: #a15f40; }
+.celebration-page--day .text-white\/70,
+.celebration-page--day .text-white\/60,
+.celebration-page--day .text-white\/55,
+.celebration-page--day .text-white\/40 { color: #705b61; }
+.celebration-page--day header a,
+.celebration-page--day header button { color: #674850; border-color: #704b5a35; background: #fff8f08c; }
+.celebration-page--day .celebration-sky { opacity: .25; }
+.celebration-title { color: #f9e3bb; text-shadow: 0 2px 34px #ffd78c33; }
+.celebration-moon { position: absolute; top: 5rem; right: 12%; width: 5rem; aspect-ratio: 1; border-radius: 50%; background: #fff1c8; box-shadow: 0 0 45px 12px #fff0c822, 0 0 120px 25px #caa9ff15; }
+.celebration-star { position: absolute; width: var(--star-size); height: var(--star-size); border-radius: 50%; background: #fff1c8; opacity: .62; animation: star-twinkle 3s ease-in-out infinite alternate; }
+.gift-card { background: linear-gradient(145deg,#ffffff0d,#ffffff05); border-color: #ffffff19; backdrop-filter: blur(14px); }
+.gift-card--rose { --gift-color: #df859e; --gift-shade: #a94b6b; }
+.gift-card--gold { --gift-color: #e6bb68; --gift-shade: #b88038; }
+.gift-card--violet { --gift-color: #b296e6; --gift-shade: #7757b7; }
+.petal-frame { background: linear-gradient(145deg,#ffe6b45c,#ffffff0a 50%,#e997ad33); border: 1px solid #ffe6b435; box-shadow: 0 24px 70px #08051040; }
+.petal-frame--2 { background: linear-gradient(145deg,#e997ad40,#ffffff0a 50%,#ffe6b44d); }
+.petal-festive-trim { display: flex; min-height: 48px; align-items: center; justify-content: space-between; gap: .5rem; padding: 0 .4rem .5rem; color: #f5d894; }
+.petal-festive-title { text-align: center; font-size: .58rem; font-weight: 600; letter-spacing: .2em; white-space: nowrap; }
+.petal-festive-title i { margin: 0 .5rem; color: #ed9e79; font-style: normal; }
+.petal-festive-icons { font-size: clamp(.85rem,2vw,1.2rem); letter-spacing: .14em; white-space: nowrap; filter: drop-shadow(0 2px 6px #f4bf6550); }
+.petal-photo { background: #f8f0e7; }
+.petal-photo img { display: block; }
+.petal-artwork { display: block; width: 100%; height: 100%; }
+.memory-petal-art { position: absolute; inset: 0; display: block; }
+.memory-petal-art .petal-artwork { width: 100%; height: 100%; }
+.gallery-image-backdrop { filter: blur(18px) brightness(.58) saturate(1.15); transform: scale(1.08); }
+.gallery-image-contain { padding: 1.25rem .25rem 3.5rem; }
+.petal-caption { color: #fff8f1; background: linear-gradient(0deg,#1c1020d9,#1c102000); }
+.celebration-page--day .petal-gallery .text-white\/60 { color: #705b61; }
+.celebration-page--day .petal-frame { box-shadow: 0 24px 70px #754a5030; }
+.celebration-page--day .petal-festive-trim { color: #81552e; }
+.celebration-page--day .petal-caption { color: #fff8f1; }
+.gift-box { position: relative; display: block; width: 92px; height: 75px; filter: drop-shadow(0 14px 14px #0003); }
+.gift-box__body { position: absolute; inset: 23px 4px 0; border-radius: 4px 4px 10px 10px; background: linear-gradient(110deg,var(--gift-shade),var(--gift-color) 45%,var(--gift-shade)); }
+.gift-box__lid { position: absolute; z-index: 1; top: 16px; left: 0; width: 100%; height: 17px; border-radius: 5px; background: linear-gradient(110deg,var(--gift-color),#fff5 40%,var(--gift-shade)); transition: transform .55s cubic-bezier(.2,.8,.2,1); }
+.gift-box__ribbon { position: absolute; z-index: 2; top: 23px; bottom: 0; left: 42px; width: 9px; background: #ffe8adbb; }
+.gift-box__bow { position: absolute; z-index: 2; top: 3px; left: 35px; width: 23px; height: 18px; border: 5px solid #ffe8ad; border-radius: 80% 10% 80% 10%; transform: rotate(38deg); }
+.gift-box.is-open .gift-box__lid { transform: translate(-8px,-20px) rotate(-17deg); }
+.gift-box.is-open .gift-box__bow { transform: translate(-8px,-20px) rotate(21deg); }
+.gift-box--gold .gift-box__ribbon,.gift-box--gold .gift-box__bow { background-color: #fff5d6; border-color: #fff5d6; }
+.gift-box--violet .gift-box__ribbon,.gift-box--violet .gift-box__bow { background-color: #eee5ff; border-color: #eee5ff; }
+.gift-box--rose .gift-box__ribbon,.gift-box--rose .gift-box__bow { background-color: #ffe3e9; border-color: #ffe3e9; }
+.firecracker-card:active .firecracker-emoji { transform: scale(.9) rotate(-9deg); }
+@keyframes star-twinkle { from { opacity: .25; transform: scale(.8); } to { opacity: .9; transform: scale(1.2); } }
+@media (prefers-reduced-motion: reduce) { .celebration-star { animation: none; } }

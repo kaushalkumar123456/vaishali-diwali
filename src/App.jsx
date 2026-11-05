@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { ArrowDown, Images, Music2, Music, Sparkles } from 'lucide-react'
+import { ArrowDown, Images, Music2, Music, Sparkles, Gift } from 'lucide-react'
 import Fireworks from './Fireworks.jsx'
 import GalleryPage from './Gallery.jsx'
+import CelebrationPage from './Celebration.jsx'
 import { createAmbientMusic } from './music.js'
 
 const fadeUp = { hidden: { opacity: 0, y: 34 }, show: { opacity: 1, y: 0, transition: { duration: .9, ease: [0.22,1,0.36,1] } } }
@@ -49,12 +50,17 @@ export default function App() {
   const [letterOpen,setLetterOpen] = useState(false)
   const [showSurprise,setShowSurprise] = useState(false)
   const [showGallery,setShowGallery] = useState(()=>window.location.hash === '#memories')
+  const [showCelebration,setShowCelebration] = useState(()=>window.location.hash === '#celebration')
+  const [burstPoint,setBurstPoint] = useState(null)
   const musicRef = useRef(null)
   const reduceMotion = useReducedMotion()
 
   useEffect(()=>()=>{musicRef.current?.close()},[])
   useEffect(()=>{
-    const syncGalleryRoute = () => setShowGallery(window.location.hash === '#memories')
+    const syncGalleryRoute = () => {
+      setShowGallery(window.location.hash === '#memories')
+      setShowCelebration(window.location.hash === '#celebration')
+    }
     window.addEventListener('hashchange',syncGalleryRoute)
     return ()=>window.removeEventListener('hashchange',syncGalleryRoute)
   },[])
@@ -64,12 +70,22 @@ export default function App() {
     if (musicOn) { musicRef.current.pause(); setMusicOn(false) }
     else { await musicRef.current.start(); setMusicOn(true) }
   }
-  const celebrate = () => setBurst(v=>v+1)
+  const celebrate = () => { setBurstPoint(null); setBurst(v=>v+1) }
+  const celebrateAt = (event,kind) => {
+    setBurstPoint({x:event.clientX,y:event.clientY,kind})
+    setBurst(v=>v+1)
+  }
   const reveal = () => { setLetterOpen(true); celebrate() }
+
+  if (showCelebration) return <div className="grain relative min-h-screen overflow-hidden bg-[#10091f] text-[#fff4e5]">
+    <Stars />
+    <Fireworks burstSignal={burst} burstPoint={burstPoint} displayOnTop />
+    <CelebrationPage onFirecracker={celebrateAt} />
+  </div>
 
   if (showGallery) return <div className="grain relative min-h-screen overflow-hidden bg-[#10091f] text-[#fff4e5]">
     <Stars />
-    <Fireworks burstSignal={burst} />
+    <Fireworks burstSignal={burst} burstPoint={burstPoint} />
     <div className="pointer-events-none fixed inset-0 z-[2] bg-[radial-gradient(ellipse_at_center,transparent_25%,rgba(9,5,19,.45)_100%)]" />
     <GalleryPage />
   </div>
@@ -83,6 +99,9 @@ export default function App() {
     </button>
     <a href="#memories" className="fixed left-4 top-3 z-40 flex h-[46px] items-center gap-2 rounded-full border border-[#f4d59a]/30 bg-[#1b1027]/80 px-4 text-xs tracking-[.08em] text-[#ffe7b6] backdrop-blur-xl transition hover:border-[#f4d59a]/60 hover:bg-[#21162b]" aria-label="Open our memories gallery">
       <Images size={15}/><span>MEMORIES</span>
+    </a>
+    <a href="#celebration" className="fixed left-1/2 top-3 z-40 flex h-[46px] -translate-x-1/2 items-center gap-2 rounded-full border border-[#f4d59a]/30 bg-[#1b1027]/80 px-4 text-xs tracking-[.08em] text-[#ffe7b6] backdrop-blur-xl transition hover:border-[#f4d59a]/60 hover:bg-[#21162b]" aria-label="Open Diwali gifts and firecrackers">
+      <Gift size={15}/><span className="hidden sm:inline">CELEBRATE</span>
     </a>
 
     <main className="relative z-10">
